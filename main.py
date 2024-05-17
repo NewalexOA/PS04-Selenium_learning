@@ -70,17 +70,23 @@ while True:
             if "Основная статья:" in div.text:
                 links.extend(div.find_elements(By.TAG_NAME, "a"))
 
-            for link in links:
-                href = link.get_attribute("href")
-                text = link.text
-                if href and text:
-                    decoded_href = urllib.parse.unquote(href)
-                    print(f"{text}: {decoded_href}")
-                    user_choice_p = input(
-                        "Для перехода к следующей ссылке нажмите Enter, для выбора этой ссылки нажмите 'S': ")
-                    if user_choice_p.lower() == "s":
-                        browser.get(href)
-                        break
+        link_index = 0
+
+        while link_index < len(links):
+            link = links[link_index]
+            href = link.get_attribute("href")
+            text = link.text
+            if href and text:
+                decoded_href = urllib.parse.unquote(href)
+                print(f"{text}: {decoded_href}")
+                user_choice_p = input("Для перехода к следующей ссылке нажмите Enter, для выбора этой ссылки нажмите 'S': ")
+                if user_choice_p.lower() == "s":
+                    browser.get(href)
+                    break
+            link_index += 1
+
+        if link_index == len(links):
+            print("Больше нет связанных страниц.")
 
     elif user_choice == "3":
         break
